@@ -1,0 +1,21 @@
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\bin\Debug\PhoneBook.exe.config
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\bin\Debug\PhoneBook.exe
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\bin\Debug\PhoneBook.pdb
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\bin\Debug\Bunifu_UI_v1.4.dll
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\obj\Debug\PhoneBook.csprojResolveAssemblyReference.cache
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\obj\Debug\PhoneBook.loginForm.resources
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\obj\Debug\PhoneBook.Properties.Resources.resources
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\obj\Debug\PhoneBook.csproj.GenerateResource.Cache
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\obj\Debug\PhoneBook.exe
+c:\users\satish shrestha\documents\visual studio 2017\Projects\PhoneBook\PhoneBook\obj\Debug\PhoneBook.pdb
+C:\Users\Satish Shrestha\Documents\Visual Studio 2017\Projects\PhoneBook\PhoneBook\obj\Debug\PhoneBook.DashBoard.resources
+F:\PhoneBook\PhoneBook\bin\Debug\PhoneBook.exe.config
+F:\PhoneBook\PhoneBook\bin\Debug\PhoneBook.exe
+F:\PhoneBook\PhoneBook\bin\Debug\PhoneBook.pdb
+F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.csprojResolveAssemblyReference.cache
+F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.DashBoard.resources
+F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.loginForm.resources
+F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.Properties.Resources.resources
+F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.csproj.GenerateResource.Cache
+F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.exe
+F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.pdb
