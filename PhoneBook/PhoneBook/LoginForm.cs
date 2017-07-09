@@ -3,6 +3,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Data.SqlClient;
+using BLL;
+using System.Data;
+using DAL;
 
 namespace PhoneBook
 {
@@ -22,7 +25,7 @@ namespace PhoneBook
             InitializeComponent();
             connectionString = "Data Source=PARTH;Initial Catalog=Phonebook;Integrated Security=True";
             connection = new SqlConnection(connectionString);
-            
+
         }
         public void setName(string name)
         {
@@ -208,7 +211,15 @@ namespace PhoneBook
                 SendMessage(Handle, WM_NCLButtonDown, HT_CAPTION, 0);
             }
         }
+        private void InsertUsers()
+        {
+            Users u = new Users();
+            u.UserName = txtRUsername.Text;
+            u.Password = txtRegisterPass.Text;
 
+            BLLUser blu = new BLLUser();
+            blu.CreateUser(u);
+        }
         private void btnSave_Click(object sender, EventArgs e)
         {
             bool inserted = ValidateRegister();
@@ -234,16 +245,11 @@ namespace PhoneBook
             else
             {
                 string username = txtRUsername.Text;
-                Users u = GetUserName(username);
-                if (string.IsNullOrEmpty(u.UserName))
+                BLLUser blu = new BLLUser();
+                DataTable dt = blu.CheckUserName(username);
+                if (dt.Rows.Count > 0)
                 {
-                    InsertUsers();
-                    MessageBox.Show("Registered Successfully");
-                    inserted = true;
-                }
-                else
-                {
-                    if (!username.ToLower().Equals(u.UserName.ToLower()))
+                    if (!username.ToLower().Equals(dt.Rows[0]["Username"].ToString().ToLower()))
                     {
                         InsertUsers();
                         MessageBox.Show("Registered successfully.");
@@ -252,44 +258,17 @@ namespace PhoneBook
                     else
                     {
                         txtRUsername.Focus();
-                        MessageBox.Show(u.UserName + " username has already been used.");
+                        MessageBox.Show(username + " username has already been used.");
                     }
                 }
-
+                else
+                {
+                    InsertUsers();
+                    MessageBox.Show("Registered Successfully");
+                    inserted = true;
+                }
             }
             return inserted;
-        }
-        private Users GetUserName(string userName)
-        {
-            connection.Open();
-            Users u = new Users();
-            string query = "Select * from [tbl_user] where Username=@Username";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@Username", userName);
-            using (SqlDataReader reader = cmd.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    u.UserName = String.Format("{0}", reader["Username"]);
-                }
-
-            }
-            connection.Close();
-            return u;
-        }
-
-        private void InsertUsers()
-        {
-            connection.Open();
-            SqlCommand cmd = new SqlCommand("INSERT INTO tbl_user (Username, Password) VALUES (@U, @P)");
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.Connection = connection;
-
-            cmd.Parameters.AddWithValue("@U", txtRUsername.Text);
-            cmd.Parameters.AddWithValue("@P", txtRegisterPass.Text);
-
-            cmd.ExecuteNonQuery();
-            connection.Close();
         }
 
         private void txtRUsername_KeyPress(object sender, KeyPressEventArgs e)
@@ -336,29 +315,7 @@ namespace PhoneBook
         private void btnSignin_Click(object sender, EventArgs e)
         {
             ValidateLogin();
-        
-        }
-     
-        private Users GetUsers(string userName, string password)
-        {
-            connection.Open();
-            Users u = new Users();
-            string query = "Select * from [tbl_user] where Username=@Username and Password=@Password";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@Username", userName);
-            cmd.Parameters.AddWithValue("@Password", password);
-            using (SqlDataReader reader = cmd.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    u.UserName = String.Format("{0}", reader["Username"]);
-                    u.Password = String.Format("{0}", reader["Password"]);
-                    setName(u.UserName);
-                }
 
-            }
-            connection.Close();
-            return u;
         }
 
         private void ValidateLogin()
@@ -371,21 +328,22 @@ namespace PhoneBook
             }
             else
             {
-                Users u = GetUsers(username, password);
-                if ((string.IsNullOrEmpty(u.UserName)) || !password.Equals(u.Password))
+                BLLUser blu = new BLLUser();
+                DataTable dts = blu.Login(username, password);
+                if (dts.Rows.Count > 0)
                 {
-                    MessageBox.Show("Please enter correct username or password");
+                        MessageBox.Show("Login Successfully.");
+                        this.Hide();
+                        DashBoard db = new DashBoard();
+                        db.setUserName(txtUserName.Text);
+                        db.Show();
                 }
                 else
                 {
-                    MessageBox.Show("Login Successfully.");
-                    this.Hide();
-                    DashBoard db = new DashBoard();
-                    db.setUserName(txtUserName.Text);
-                    db.Show();
+                    MessageBox.Show("Please enter correct username or password");
                 }
             }
-
         }
     }
 }
+

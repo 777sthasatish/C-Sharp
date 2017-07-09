@@ -1,68 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Data.SqlClient;
 using System.IO;
 using System.Drawing.Imaging;
+using BLL;
 
 namespace PhoneBook
 {
     public partial class DashBoard : Form
     {
-        ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashBoard));
+
         public const int WM_NCLButtonDown = 0xA1;
         public const int HT_CAPTION = 0x2;
         [DllImportAttribute("User32.dll")]
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
         [DllImportAttribute("User32.dll")]
         public static extern bool ReleaseCapture();
-        string connectionString = null;
-        DataSet contacts;
-        SqlCommand cmd;
-        SqlConnection connection;
+
         MemoryStream ms;
         private string userName;
+        BLLContact bllCon = new BLLContact();
+        DataTable dTable = new DataTable();
+        ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashBoard));
         public DashBoard()
         {
             InitializeComponent();
-            connectionString = "Data Source=PARTH;Initial Catalog=Phonebook;Integrated Security=True";
-            connection = new SqlConnection(connectionString);
-            LoadContact();
             lstContactList.View = View.Details;
             lstContactList.Columns.Add("Contacts", 500);
             ShowContact();
 
-
-        }
-
-        private void pnlTitle_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox4_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void bunifuSeparator7_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        //For making the title panel movable.
         private void pnlTitle_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -75,11 +49,6 @@ namespace PhoneBook
         private void picClose_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void lstContactList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void txtFirstName_MouseClick(object sender, MouseEventArgs e)
@@ -308,6 +277,7 @@ namespace PhoneBook
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            //lets user to enter at least mobile number or landline number
             if ((txtMobNo.Text == "" || txtMobNo.Text.Equals("Mobile Number")) && (txtLandNo.Text == "" || txtLandNo.Text.Equals("Landline Number")))
             {
                 MessageBox.Show("Mobile and Landline number both can't be empty.Please enter either of two values.");
@@ -317,24 +287,20 @@ namespace PhoneBook
                 validateContact();
                 InsertContact();
                 ChangeTextBox();
-
             }
         }
 
         private void InsertContact()
         {
-            cmd = new SqlCommand("INSERT INTO tbl_contact(FirstName,MiddleName,LastName,Street,City,Country,DOB,Gender,ContactRelation,EmailAddress,MobileNumber,LandlineNumber,ContactImage)  VALUES(@fName,@mName,@lName,@street,@city,@country,@dob,@gender,@contactRelation,@eMail,@mobileNo,@landNo,@image)");
-
-            connection.Open();
-            cmd.CommandType = CommandType.Text;
-            cmd.Connection = connection;
-
-            cmd.Parameters.AddWithValue("@fName", txtFirstName.Text);
-            cmd.Parameters.AddWithValue("@mName", txtMidName.Text);
-            cmd.Parameters.AddWithValue("@lName", txtLastName.Text);
-            cmd.Parameters.AddWithValue("@street", txtStreet.Text);
-            cmd.Parameters.AddWithValue("@city", txtCity.Text);
-            cmd.Parameters.AddWithValue("@country", txtCountry.Text);
+            convertImage();
+            Contact con = new Contact();
+            con.FirstName = txtFirstName.Text;
+            con.MiddleName = txtMidName.Text;
+            con.LastName = txtLastName.Text;
+            con.Street = txtStreet.Text;
+            con.City = txtCity.Text;
+            con.Country = txtCountry.Text;
+            con.DOB = dtpDOB.Value;
             String gender;
             if (rdBtnOthers.Checked == true)
             {
@@ -348,22 +314,16 @@ namespace PhoneBook
             {
                 gender = rdBtnMale.Text;
             }
-            cmd.Parameters.AddWithValue("@dob", dtpDOB.Value);
-            cmd.Parameters.AddWithValue("@gender", gender);
-            cmd.Parameters.AddWithValue("@contactRelation", txtRelation.Text);
-            cmd.Parameters.AddWithValue("@eMail", txtEmail.Text);
-            cmd.Parameters.AddWithValue("@mobileNo", txtMobNo.Text);
-            cmd.Parameters.AddWithValue("@landNo", txtLandNo.Text);
-            convertImage();
-
-            int inserted = cmd.ExecuteNonQuery();
-            connection.Close();
-
+            con.Gender = gender;
+            con.ContactRelation = txtRelation.Text;
+            con.EmailAddress = txtEmail.Text;
+            con.MobileNumber = txtMobNo.Text;
+            con.LandLineNumber = txtLandNo.Text;
+            int inserted = bllCon.CreateContact(con, convertImage());
             if (inserted > 0)
             {
                 MessageBox.Show("Inserted Successfully.");
                 lstContactList.Items.Clear();
-                LoadContact();
                 ShowContact();
             }
             else
@@ -414,7 +374,6 @@ namespace PhoneBook
             {
                 txtLandNo.Text = "";
             }
-
         }
 
         private void picContact_MouseEnter(object sender, EventArgs e)
@@ -440,8 +399,10 @@ namespace PhoneBook
             }
         }
 
-        private void convertImage()//function to convert the photo 
+        private byte[] convertImage()//function to convert the photo 
         {
+            byte[] photo_aray = new byte[ms.Length];
+            ms = new MemoryStream();
             if (picContact.Image != null)//checks whether there is image in picture box
             {
                 //using FileStream:(will not work while updating, if image is not changed since it uses image location rather than image itself)
@@ -450,64 +411,50 @@ namespace PhoneBook
                 //fs.Read(photo_aray, 0, photo_aray.Length);  
 
                 //For now we are using memory stream which is more dynamic and reliable
-                ms = new MemoryStream();
+
                 picContact.Image.Save(ms, ImageFormat.Jpeg);
-                byte[] photo_aray = new byte[ms.Length];
+
                 ms.Position = 0;
                 ms.Read(photo_aray, 0, photo_aray.Length);
-                cmd.Parameters.AddWithValue("@image", photo_aray);
 
             }
-
-        }
-
-        private void LoadContact()
-        {
-            string query = "Select ContactImage,FirstName,LastName,ContactID from tbl_contact";
-            SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
-            contacts = new DataSet();
-            adapter.Fill(contacts, "tbl_contact");
+            return ms.ToArray();
         }
 
         private void ShowContact()
         {
+            imgContactList = new ImageList();
+            imgContactList.ColorDepth = ColorDepth.Depth32Bit;
+            imgContactList.ImageSize = new Size(150, 140);
             byte[] photoArray;
+            //BLLContact blc = new BLLContact();
+            dTable = bllCon.GetContacts();
             //i represent the rows;
             //contacts.Table[0] retrieves the table located in index 0
-            if (contacts.Tables[0].Rows.Count > 0)
+            if (dTable.Rows.Count > 0)
             {
-                MessageBox.Show(contacts.Tables[0].Rows.Count.ToString());
-                for (int i = 0; i < contacts.Tables[0].Rows.Count; i++)//loops till the last row of the table
+
+                for (int i = 0; i < dTable.Rows.Count; i++)//loops till the last row of the table
                 {
                     string uName = null;
                     string id = null;
 
-                    //j represents the columns
-                    for (int j = 0; j < 4; j++)//loops till the last column
-                    {
-                        if (j == 0)
-                        {
-                            photoArray = (byte[])contacts.Tables[0].Rows[i][j];
-                            MemoryStream ms = new MemoryStream(photoArray);
-                            imgContactList.Images.Add(Image.FromStream(ms));
-                        }
-                        else if (j == 3)
-                        {
-                            id = contacts.Tables[0].Rows[i][j].ToString();
-                        }
-                        else
-                        {
-                            string value = contacts.Tables[0].Rows[i][j].ToString();
-                            uName = uName + " " + value;
-                        }
-                    }
+                    photoArray = (byte[])dTable.Rows[i]["ContactImage"];
+                     ms = new MemoryStream(photoArray);
+                    imgContactList.Images.Add(Image.FromStream(ms));
+
+                    id = dTable.Rows[i]["ContactID"].ToString();
+                    uName = dTable.Rows[i]["FirstName"].ToString() + " " + dTable.Rows[i]["LastName"].ToString();
+
+                    lstContactList.SmallImageList = imgContactList;
                     lstContactList.Items.Add(id, uName, i);
+
                 }
+
             }
-            lstContactList.SmallImageList = imgContactList;
         }
 
-
+        //logout
         private void bunifuImageButton1_Click_1(object sender, EventArgs e)
         {
             this.Close();
@@ -571,36 +518,33 @@ namespace PhoneBook
 
         }
 
-        private void deleteContact(string id)
-        {
-            int conId = Convert.ToInt32(id);
-            cmd = new SqlCommand("Delete from tbl_contact where ContactID=@id");
-            connection.Open();
-            cmd.CommandType = CommandType.Text;
-            cmd.Connection = connection;
-            cmd.Parameters.AddWithValue("@id", conId);
-            cmd.ExecuteNonQuery();
-            connection.Close();
-
-        }
-
-
-
+        //mouse click event for delete button to delete contact
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in lstContactList.Items)
             {
-                if (item.Checked == true)
+                if (item.Checked == true)//delete the contacts which has been checked or ticked.Can delete multiple contacts at a time
                 {
                     item.Remove();
-                    deleteContact(item.Name);
+                    bllCon.DeleteContact(item.Name);
+                    normalMode();
                 }
-
+                else if (item.Selected)//delete the contacts which has been selected or clicked.Only deletes one contact at a time.
+                {
+                    item.Remove();
+                    bllCon.DeleteContact(item.Name);
+                    normalMode();
+                }
             }
         }
 
         private void pictureBox2_Click(object sender, EventArgs e)
         {
+            txtSearch.ForeColor = Color.Gray;
+            txtSearch.Text = "Search Contact";
+            lstContactList.Items.Clear();
+            ShowContact();
+
             lstContactList.CheckBoxes = false;
             foreach (ListViewItem item in lstContactList.Items)
             {
@@ -629,40 +573,185 @@ namespace PhoneBook
             btnCancel.Size = new Size(90, 90);
         }
 
-        private void getValue(string name)
-        {
-            int id = Convert.ToInt32(name);
-            SqlDataAdapter adapter = new SqlDataAdapter("Select * from tbl_Contact where ContactID=@id", connection);
-            connection.Open();
-            cmd.Parameters.AddWithValue("@id", id);
-            contacts = new DataSet();
-            adapter.Fill(contacts, "tbl_contact");
-            connection.Close();
-        }
-        private void fillContact()
-        {
-            if (contacts.Tables[0].Rows.Count > 0)
-            {
-                for (int i = 0; i < contacts.Tables[0].Rows.Count; i++)
-                {
-                    for (int j = 0; j < contacts.Tables[0].Columns.Count; j++)
-                    {
 
-                    }
-                }
-            }
-        }
+        //This method is called when we click on a particular contact in a contactlist of list view in order to show details
+        //This enables users to edit the contact details
         private void lstContactList_MouseClick(object sender, MouseEventArgs e)
         {
             foreach (ListViewItem item in lstContactList.Items)
             {
-                if (item.Selected == true)
+                if (item.Selected == true)//only when an contact is selected from the contact list of list view
                 {
-                    //getValue(item.Name);
+
+                    btnSave.Visible = false;
+                    btnEdit.Visible = true;
+                    btnEdit.Location = new Point(1090, 790);
+                    btnNew.Visible = true;
+                    dTable = bllCon.FillForm(item.Name);//Values from BLL of BLLContact method is called upon to fill datatable.
+                    showContact();
                 }
             }
         }
+
+        //Values that are stored in the variable dTable which is a datatable are extracted and stored in the object contact to make it useful for filling up the contact details form
+        private Contact fillContact()
+        {
+            Contact con = new Contact();
+            byte[] photoArray;
+
+            //image on the datatable which is in byte form is retrieved and stored in photoArray which is a array of byte
+            photoArray = (byte[])dTable.Rows[0]["ContactImage"];
+             ms = new MemoryStream(photoArray);//photoArray is converted into image form by memoryStream
+            picContact.Image = Image.FromStream(ms);//image is stored into picContact which is a picture box 
+
+            //values from datatable is stored into the contact object and returned
+            con.CID = (int)dTable.Rows[0]["ContactID"];
+            con.FirstName = dTable.Rows[0]["FirstName"].ToString();
+            con.MiddleName = dTable.Rows[0]["MiddleName"].ToString();
+            con.LastName = dTable.Rows[0]["LastName"].ToString();
+            con.Street = dTable.Rows[0]["Street"].ToString();
+            con.City = dTable.Rows[0]["City"].ToString();
+            con.Country = dTable.Rows[0]["Country"].ToString();
+            con.DOB = DateTime.Parse(dTable.Rows[0]["DOB"].ToString());
+            con.Gender = dTable.Rows[0]["Gender"].ToString();
+            con.ContactRelation = dTable.Rows[0]["ContactRelation"].ToString();
+            con.EmailAddress = dTable.Rows[0]["EmailAddress"].ToString();
+            con.MobileNumber = dTable.Rows[0]["MobileNumber"].ToString();
+            con.LandLineNumber = dTable.Rows[0]["LandlineNumber"].ToString();
+            return con;
+        }
+
+        //Finally this method populates values into the contact form
+        private void showContact()
+        {
+            Contact c = fillContact();//contact object which has values returned by fillContact method is stored into another Contact object.
+            if (!String.IsNullOrEmpty(c.FirstName))
+            {
+                txtFirstName.Text = c.FirstName;
+            }
+            if (!String.IsNullOrEmpty(c.MiddleName))
+            {
+                txtMidName.Text = c.MiddleName;
+            }
+            if (!String.IsNullOrEmpty(c.LastName))
+            {
+                txtLastName.Text = c.LastName;
+            }
+            if (!String.IsNullOrEmpty(c.Street))
+            {
+                txtStreet.Text = c.Street;
+            }
+            if (!String.IsNullOrEmpty(c.City))
+            {
+                txtCity.Text = c.City;
+            }
+            if (!String.IsNullOrEmpty(c.Country))
+            {
+                txtCountry.Text = c.Country;
+            }
+            if (!String.IsNullOrEmpty(c.ContactRelation))
+            {
+                txtRelation.Text = c.ContactRelation;
+            }
+
+            if (c.Gender.Equals("Male"))
+            {
+                rdBtnMale.Checked = true;
+            }
+            else if (c.Gender.Equals("Female"))
+            {
+                rdBtnFemale.Checked = true;
+            }
+            else
+            {
+                rdBtnOthers.Checked = true;
+            }
+
+            dtpDOB.Value = c.DOB;
+            if (!String.IsNullOrEmpty(c.EmailAddress))
+            {
+                txtEmail.Text = c.EmailAddress;
+            }
+            if (!String.IsNullOrEmpty(c.MobileNumber))
+            {
+                txtMobNo.Text = c.MobileNumber;
+            }
+            if (!String.IsNullOrEmpty(c.LandLineNumber))
+            {
+                txtLandNo.Text = c.LandLineNumber;
+            }
+        }
+        //changes contact form panel to default state i.e new contact button being enable and other buttons being disabled
+        private void normalMode()
+        {
+            btnEdit.Visible = false;
+            btnSave.Visible = true;
+            btnNew.Visible = false;
+            ChangeTextBox();
+        }
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            normalMode();
+        }
+
+        private void btnRefresh_MouseEnter(object sender, EventArgs e)
+        {
+            btnRefresh.Size = new Size(92, 99);
+        }
+
+        private void btnRefresh_MouseLeave(object sender, EventArgs e)
+        {
+            btnRefresh.Size = new Size(87, 94);
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            ChangeTextBox();
+        }
+
+        //shows the search result when search parameter in contact list is passed 
+        private void ShowSearchResult()
+        {
+            lstContactList.Items.Clear();
+            if (dTable.Rows.Count > 0)
+            {
+                byte[] photoArray;
+                Contact con = new Contact();
+                ImageList imgContactList = new ImageList();
+                imgContactList.ColorDepth = ColorDepth.Depth32Bit;
+                imgContactList.ImageSize = new Size(150, 140);
+                for (int i = 0; i < dTable.Rows.Count; i++)
+                {
+                    photoArray = (byte[])dTable.Rows[i]["ContactImage"];
+                     ms = new MemoryStream(photoArray);
+                    imgContactList.Images.Add(Image.FromStream(ms));
+
+                    con.CID = (int)dTable.Rows[i]["ContactID"];
+                    con.FirstName = dTable.Rows[i]["FirstName"].ToString();
+                    con.LastName = dTable.Rows[i]["LastName"].ToString();
+
+                    lstContactList.SmallImageList = imgContactList;
+                    lstContactList.Items.Add(con.CID.ToString(), con.FirstName + " " + con.LastName, i);
+
+                }
+            }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            //whenever search parameter is passed in the contact list searches the contacts regarding the search parameter and retrives values from the database and store it in datatable
+            dTable = bllCon.SearchContact(txtSearch.Text);
+            //calls upon the ShowSearchResult to view the contacts searched
+            ShowSearchResult();
+        }
+
+        private void txtSearch_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (txtSearch.Text == "Search Contact")
+            {
+                txtSearch.Text = "";
+                txtSearch.ForeColor = Color.FromArgb(67, 173, 225);
+            }
+        }
     }
-
-
 }

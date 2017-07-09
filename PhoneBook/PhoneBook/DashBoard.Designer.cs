@@ -37,6 +37,9 @@
             this.lblUserName = new System.Windows.Forms.Label();
             this.lblWelcome = new System.Windows.Forms.Label();
             this.pnlContact = new System.Windows.Forms.Panel();
+            this.btnRefresh = new System.Windows.Forms.PictureBox();
+            this.btnNew = new Bunifu.Framework.UI.BunifuFlatButton();
+            this.btnEdit = new Bunifu.Framework.UI.BunifuFlatButton();
             this.bunifuSeparator1 = new Bunifu.Framework.UI.BunifuSeparator();
             this.sepSeventh = new Bunifu.Framework.UI.BunifuSeparator();
             this.sepEight = new Bunifu.Framework.UI.BunifuSeparator();
@@ -85,6 +88,7 @@
             this.pnlTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picClose)).BeginInit();
             this.pnlContact.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnRefresh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picContact)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnLogout)).BeginInit();
@@ -126,7 +130,6 @@
             this.pnlTitle.Name = "pnlTitle";
             this.pnlTitle.Size = new System.Drawing.Size(2012, 56);
             this.pnlTitle.TabIndex = 1;
-            this.pnlTitle.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlTitle_Paint);
             this.pnlTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlTitle_MouseDown);
             // 
             // picClose
@@ -167,6 +170,9 @@
             // pnlContact
             // 
             this.pnlContact.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(59)))), ((int)(((byte)(91)))));
+            this.pnlContact.Controls.Add(this.btnRefresh);
+            this.pnlContact.Controls.Add(this.btnNew);
+            this.pnlContact.Controls.Add(this.btnEdit);
             this.pnlContact.Controls.Add(this.bunifuSeparator1);
             this.pnlContact.Controls.Add(this.sepSeventh);
             this.pnlContact.Controls.Add(this.sepEight);
@@ -200,6 +206,85 @@
             this.pnlContact.Name = "pnlContact";
             this.pnlContact.Size = new System.Drawing.Size(1425, 907);
             this.pnlContact.TabIndex = 4;
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.BackColor = System.Drawing.Color.Transparent;
+            this.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnRefresh.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("btnRefresh.Image")));
+            this.btnRefresh.Location = new System.Drawing.Point(637, 795);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(87, 94);
+            this.btnRefresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnRefresh.TabIndex = 35;
+            this.btnRefresh.TabStop = false;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            this.btnRefresh.MouseEnter += new System.EventHandler(this.btnRefresh_MouseEnter);
+            this.btnRefresh.MouseLeave += new System.EventHandler(this.btnRefresh_MouseLeave);
+            // 
+            // btnNew
+            // 
+            this.btnNew.Activecolor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.btnNew.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
+            this.btnNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.btnNew.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnNew.BorderRadius = 24;
+            this.btnNew.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.btnNew.ButtonText = "New";
+            this.btnNew.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnNew.ForeColor = System.Drawing.Color.Black;
+            this.btnNew.Iconcolor = System.Drawing.Color.Transparent;
+            this.btnNew.Iconimage = ((System.Drawing.Image)(resources.GetObject("btnNew.Iconimage")));
+            this.btnNew.Iconimage_right = null;
+            this.btnNew.Iconimage_right_Selected = null;
+            this.btnNew.Iconimage_Selected = null;
+            this.btnNew.IconZoom = 65D;
+            this.btnNew.IsTab = false;
+            this.btnNew.Location = new System.Drawing.Point(12, 795);
+            this.btnNew.Margin = new System.Windows.Forms.Padding(14, 13, 14, 13);
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Normalcolor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(175)))), ((int)(((byte)(80)))));
+            this.btnNew.OnHovercolor = System.Drawing.Color.White;
+            this.btnNew.OnHoverTextColor = System.Drawing.SystemColors.WindowText;
+            this.btnNew.selected = false;
+            this.btnNew.Size = new System.Drawing.Size(236, 94);
+            this.btnNew.TabIndex = 34;
+            this.btnNew.Textcolor = System.Drawing.Color.White;
+            this.btnNew.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNew.Visible = false;
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Activecolor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(173)))), ((int)(((byte)(225)))));
+            this.btnEdit.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
+            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(173)))), ((int)(((byte)(225)))));
+            this.btnEdit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnEdit.BorderRadius = 24;
+            this.btnEdit.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.btnEdit.ButtonText = "Edit Contact";
+            this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEdit.ForeColor = System.Drawing.Color.Black;
+            this.btnEdit.Iconcolor = System.Drawing.Color.Transparent;
+            this.btnEdit.Iconimage = ((System.Drawing.Image)(resources.GetObject("btnEdit.Iconimage")));
+            this.btnEdit.Iconimage_right = null;
+            this.btnEdit.Iconimage_right_Selected = null;
+            this.btnEdit.Iconimage_Selected = null;
+            this.btnEdit.IconZoom = 65D;
+            this.btnEdit.IsTab = false;
+            this.btnEdit.Location = new System.Drawing.Point(1080, 687);
+            this.btnEdit.Margin = new System.Windows.Forms.Padding(14, 13, 14, 13);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Normalcolor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(173)))), ((int)(((byte)(225)))));
+            this.btnEdit.OnHovercolor = System.Drawing.Color.White;
+            this.btnEdit.OnHoverTextColor = System.Drawing.SystemColors.WindowText;
+            this.btnEdit.selected = false;
+            this.btnEdit.Size = new System.Drawing.Size(345, 94);
+            this.btnEdit.TabIndex = 33;
+            this.btnEdit.Textcolor = System.Drawing.Color.White;
+            this.btnEdit.TextFont = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEdit.Visible = false;
             // 
             // bunifuSeparator1
             // 
@@ -242,7 +327,6 @@
             this.sepEight.TabIndex = 29;
             this.sepEight.Transparency = 255;
             this.sepEight.Vertical = false;
-            this.sepEight.Load += new System.EventHandler(this.bunifuSeparator7_Load);
             // 
             // txtRelation
             // 
@@ -256,7 +340,6 @@
             this.txtRelation.TabIndex = 10;
             this.txtRelation.Text = "Contact Relation";
             this.txtRelation.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtRelation_MouseClick);
-            this.txtRelation.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             this.txtRelation.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtRelation_KeyPress);
             // 
             // btnSave
@@ -343,7 +426,6 @@
             this.txtEmail.TabIndex = 11;
             this.txtEmail.Text = "Email Address";
             this.txtEmail.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtEmail_MouseClick);
-            this.txtEmail.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.txtEmail.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEmail_KeyPress);
             // 
             // lblDOB
@@ -616,7 +698,6 @@
             this.lstContactList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(173)))), ((int)(((byte)(225)))));
             this.lstContactList.FullRowSelect = true;
             this.lstContactList.GridLines = true;
-            this.lstContactList.HoverSelection = true;
             this.lstContactList.Location = new System.Drawing.Point(0, 243);
             this.lstContactList.MultiSelect = false;
             this.lstContactList.Name = "lstContactList";
@@ -728,9 +809,9 @@
             // 
             // btnLogout
             // 
-            this.btnLogout.BackColor = System.Drawing.Color.White;
+            this.btnLogout.BackColor = System.Drawing.Color.RoyalBlue;
             this.btnLogout.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnLogout.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.btnLogout.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLogout.Image = ((System.Drawing.Image)(resources.GetObject("btnLogout.Image")));
             this.btnLogout.Location = new System.Drawing.Point(1925, 20);
             this.btnLogout.Name = "btnLogout";
@@ -755,6 +836,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCancel.Image = ((System.Drawing.Image)(resources.GetObject("btnCancel.Image")));
             this.btnCancel.Location = new System.Drawing.Point(476, 10);
             this.btnCancel.Name = "btnCancel";
@@ -768,6 +850,7 @@
             // 
             // btnDelete
             // 
+            this.btnDelete.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnDelete.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.Image")));
             this.btnDelete.Location = new System.Drawing.Point(344, 10);
             this.btnDelete.Name = "btnDelete";
@@ -824,7 +907,7 @@
             this.bunifuSeparator2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.bunifuSeparator2.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(173)))), ((int)(((byte)(225)))));
             this.bunifuSeparator2.LineThickness = 2;
-            this.bunifuSeparator2.Location = new System.Drawing.Point(3, 66);
+            this.bunifuSeparator2.Location = new System.Drawing.Point(3, 56);
             this.bunifuSeparator2.Margin = new System.Windows.Forms.Padding(12, 10, 12, 10);
             this.bunifuSeparator2.Name = "bunifuSeparator2";
             this.bunifuSeparator2.Size = new System.Drawing.Size(569, 10);
@@ -834,13 +917,15 @@
             // 
             // btnSearch
             // 
+            this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
             this.btnSearch.Location = new System.Drawing.Point(495, 3);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(71, 63);
+            this.btnSearch.Size = new System.Drawing.Size(71, 53);
             this.btnSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.btnSearch.TabIndex = 3;
             this.btnSearch.TabStop = false;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // txtSearch
             // 
@@ -853,6 +938,7 @@
             this.txtSearch.Size = new System.Drawing.Size(486, 40);
             this.txtSearch.TabIndex = 1;
             this.txtSearch.Text = "Search Contact";
+            this.txtSearch.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtSearch_MouseClick);
             // 
             // DashBoard
             // 
@@ -877,6 +963,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picClose)).EndInit();
             this.pnlContact.ResumeLayout(false);
             this.pnlContact.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.btnRefresh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picContact)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -944,5 +1031,8 @@
         private Bunifu.Framework.UI.BunifuFlatButton btnImport;
         private System.Windows.Forms.PictureBox btnDelete;
         private System.Windows.Forms.PictureBox btnCancel;
+        private Bunifu.Framework.UI.BunifuFlatButton btnEdit;
+        private Bunifu.Framework.UI.BunifuFlatButton btnNew;
+        private System.Windows.Forms.PictureBox btnRefresh;
     }
 }

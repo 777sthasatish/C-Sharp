@@ -1,0 +1,4 @@
+F:\PhoneBook\DAL\bin\Debug\DAL.dll
+F:\PhoneBook\DAL\bin\Debug\DAL.pdb
+F:\PhoneBook\DAL\obj\Debug\DAL.dll
+F:\PhoneBook\DAL\obj\Debug\DAL.pdb

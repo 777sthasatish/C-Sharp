@@ -19,3 +19,7 @@ F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.Properties.Resources.resources
 F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.csproj.GenerateResource.Cache
 F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.exe
 F:\PhoneBook\PhoneBook\obj\Debug\PhoneBook.pdb
+F:\PhoneBook\PhoneBook\bin\Debug\DAL.dll
+F:\PhoneBook\PhoneBook\bin\Debug\DAL.pdb
+F:\PhoneBook\PhoneBook\bin\Debug\BLL.dll
+F:\PhoneBook\PhoneBook\bin\Debug\BLL.pdb

@@ -1,0 +1,7 @@
+F:\PhoneBook\BLL\bin\Debug\BLL.dll
+F:\PhoneBook\BLL\bin\Debug\BLL.pdb
+F:\PhoneBook\BLL\bin\Debug\DAL.dll
+F:\PhoneBook\BLL\bin\Debug\DAL.pdb
+F:\PhoneBook\BLL\obj\Debug\BLL.csprojResolveAssemblyReference.cache
+F:\PhoneBook\BLL\obj\Debug\BLL.dll
+F:\PhoneBook\BLL\obj\Debug\BLL.pdb

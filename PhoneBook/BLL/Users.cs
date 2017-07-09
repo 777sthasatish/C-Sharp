@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhoneBook
+namespace BLL
 {
-    class Users
+    public class Users
     {
-        private int UserId;
+        private int userId;
         private string userName;
         private string password;
 
-        public int UserId1 { get => UserId; set => UserId = value; }
+        public int UserId { get => UserId; set => UserId = value; }
         public string UserName { get => userName; set => userName = value; }
         public string Password { get => password; set => password = value; }
     }
